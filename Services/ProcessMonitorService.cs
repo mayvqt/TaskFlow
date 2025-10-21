@@ -9,15 +9,20 @@ namespace TaskFlow.Services
     {
         private readonly ILogger<ProcessMonitorService> _logger;
         private readonly IConfigurationService _configurationService;
+        private readonly IApplicationManagementService _applicationManagementService;
         private Timer? _monitoringTimer;
         private bool _isMonitoring;
 
         public event EventHandler<MonitoredApplication>? ApplicationStatusChanged;
 
-        public ProcessMonitorService(ILogger<ProcessMonitorService> logger, IConfigurationService configurationService)
+        public ProcessMonitorService(
+            ILogger<ProcessMonitorService> logger, 
+            IConfigurationService configurationService,
+            IApplicationManagementService applicationManagementService)
         {
             _logger = logger;
             _configurationService = configurationService;
+            _applicationManagementService = applicationManagementService;
         }
 
         public async Task StartMonitoringAsync()
@@ -207,6 +212,8 @@ namespace TaskFlow.Services
             var wasRunning = application.Status == ApplicationStatus.Running;
             var isRunning = IsApplicationRunning(application);
 
+            _logger.LogDebug($"Status check for {application.Name}: WasRunning={wasRunning}, IsRunning={isRunning}, PID={application.ProcessId}");
+
             if (wasRunning && !isRunning)
             {
                 // Application crashed - calculate uptime
@@ -217,13 +224,14 @@ namespace TaskFlow.Services
                 }
 
                 // Update crash tracking
+                var oldPid = application.ProcessId;
                 application.Status = ApplicationStatus.Stopped;
                 application.LastStopped = DateTime.Now;
                 application.LastCrashTime = DateTime.Now;
                 application.TotalCrashes++;
                 application.ProcessId = 0;
 
-                _logger.LogWarning($"Application {application.Name} has crashed (PID was {application.ProcessId}). Total crashes: {application.TotalCrashes}");
+                _logger.LogWarning($"Application {application.Name} has crashed (PID was {oldPid}). Total crashes: {application.TotalCrashes}");
 
                 if (application.RestartOnCrash && application.CurrentRestartAttempts < application.MaxRestartAttempts)
                 {
@@ -244,6 +252,7 @@ namespace TaskFlow.Services
             }
             else if (!wasRunning && isRunning)
             {
+                _logger.LogInformation($"Application {application.Name} detected as running (PID: {application.ProcessId})");
                 application.Status = ApplicationStatus.Running;
                 ApplicationStatusChanged?.Invoke(this, application);
             }
@@ -257,12 +266,20 @@ namespace TaskFlow.Services
 
             try
             {
-                var config = await _configurationService.LoadConfigurationAsync();
+                _logger.LogDebug("Running application monitoring cycle");
+                var applications = await _applicationManagementService.GetApplicationsAsync();
                 
-                foreach (var app in config.Applications.Where(a => a.IsEnabled))
+                var enabledApps = applications.Where(a => a.IsEnabled).ToList();
+                _logger.LogDebug($"Monitoring {enabledApps.Count} enabled applications");
+                
+                foreach (var app in enabledApps)
                 {
+                    _logger.LogDebug($"Checking application: {app.Name} (PID: {app.ProcessId}, Status: {app.Status})");
                     await UpdateApplicationStatusAsync(app);
                 }
+                
+                // Save configuration after monitoring cycle to persist status changes
+                await _configurationService.SaveConfigurationAsync();
             }
             catch (Exception ex)
             {

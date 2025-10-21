@@ -40,6 +40,11 @@
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Button Style="{StaticResource MaterialDesignToolButton}" 
+                            ToolTip="Test Monitoring" Margin="8,0"
+                            Command="{Binding TestMonitoringCommand}">
+                        <materialDesign:PackIcon Kind="TestTube" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignToolButton}" 
                             ToolTip="System Information" Margin="8,0"
                             Command="{Binding ShowSystemInfoCommand}">
                         <materialDesign:PackIcon Kind="Information" />

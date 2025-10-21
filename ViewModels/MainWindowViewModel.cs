@@ -63,6 +63,7 @@ namespace TaskFlow.ViewModels
         public ICommand ShowSystemInfoCommand { get; }
         public ICommand ShowSettingsCommand { get; }
         public ICommand ShowAboutCommand { get; }
+        public ICommand TestMonitoringCommand { get; }
 
         public MainWindowViewModel(
             ILogger<MainWindowViewModel> logger,
@@ -96,6 +97,7 @@ namespace TaskFlow.ViewModels
             ShowSystemInfoCommand = new RelayCommand(ShowSystemInfo);
             ShowSettingsCommand = new RelayCommand(ShowSettings);
             ShowAboutCommand = new RelayCommand(ShowAbout);
+            TestMonitoringCommand = new RelayCommand(TestMonitoring);
 
             // Setup event handlers
             _processMonitorService.ApplicationStatusChanged += OnApplicationStatusChanged;
@@ -484,6 +486,34 @@ namespace TaskFlow.ViewModels
         {
             var dialog = new AboutDialog();
             dialog.ShowDialog();
+        }
+
+        private void TestMonitoring(object? parameter)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    LogContent += $"[{DateTime.Now:HH:mm:ss}] Testing monitoring for all applications...\n";
+                    
+                    foreach (var app in Applications)
+                    {
+                        await _processMonitorService.UpdateApplicationStatusAsync(app);
+                        LogContent += $"[{DateTime.Now:HH:mm:ss}] Checked {app.Name}: Status={app.Status}, PID={app.ProcessId}\n";
+                    }
+                    
+                    Application.Current.Dispatcher.Invoke(() => StatusMessage = "Monitoring test completed");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error during monitoring test");
+                    Application.Current.Dispatcher.Invoke(() => 
+                    {
+                        StatusMessage = "Monitoring test failed";
+                        LogContent += $"[{DateTime.Now:HH:mm:ss}] ERROR: {ex.Message}\n";
+                    });
+                }
+            });
         }
     }
 
