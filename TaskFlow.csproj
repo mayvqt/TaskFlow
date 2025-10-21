@@ -11,6 +11,10 @@
     <AssemblyDescription>Windows Server Application Monitor and Manager</AssemblyDescription>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyInformationalVersion>1.0.0+build.2025.10.21</AssemblyInformationalVersion>
+    <Product>TaskFlow</Product>
+    <Company>TaskFlow Development</Company>
+    <Copyright>Copyright © 2025 TaskFlow Development</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

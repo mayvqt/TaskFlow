@@ -470,7 +470,7 @@ namespace TaskFlow.ViewModels
         // Other Commands
         private void ShowSystemInfo(object? parameter)
         {
-            var dialog = new SystemInfoDialog(_applicationManagementService);
+            var dialog = new Views.SystemInfoDialog(_applicationManagementService);
             dialog.ShowDialog();
         }
 
