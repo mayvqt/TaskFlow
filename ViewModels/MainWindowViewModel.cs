@@ -175,39 +175,37 @@ namespace TaskFlow.ViewModels
         {
             try
             {
-                // For now, create a simple test application
-                var newApp = new MonitoredApplication
+                var dialog = new Views.AddApplicationDialog();
+                if (dialog.ShowDialog() == true && dialog.Application != null)
                 {
-                    Name = $"Sample App {Applications.Count + 1}",
-                    ExecutablePath = @"C:\Windows\System32\notepad.exe",
-                    Arguments = "",
-                    WorkingDirectory = @"C:\Windows\System32",
-                    IsEnabled = true,
-                    StartupDelay = TimeSpan.Zero,
-                    RestartOnCrash = true,
-                    MaxRestartAttempts = 3
-                };
-
-                Applications.Add(newApp);
-                _ = Task.Run(async () =>
-                {
-                    try
+                    Applications.Add(dialog.Application);
+                    _ = Task.Run(async () =>
                     {
-                        await _applicationManagementService.AddApplicationAsync(newApp);
-                        Application.Current.Dispatcher.Invoke(() => StatusMessage = $"Added application {newApp.Name}");
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Failed to add application");
-                        Application.Current.Dispatcher.Invoke(() => 
-                            StatusMessage = $"Failed to add application: {ex.Message}");
-                    }
-                });
+                        try
+                        {
+                            await _applicationManagementService.AddApplicationAsync(dialog.Application);
+                            Application.Current.Dispatcher.Invoke(() => 
+                            {
+                                StatusMessage = $"Added application: {dialog.Application.Name}";
+                                LogContent += $"[{DateTime.Now:HH:mm:ss}] Added application: {dialog.Application.Name}\n";
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Failed to save application");
+                            Application.Current.Dispatcher.Invoke(() => 
+                            {
+                                LogContent += $"[{DateTime.Now:HH:mm:ss}] ERROR saving application: {ex.Message}\n";
+                            });
+                        }
+                    });
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error adding application");
-                StatusMessage = $"Error adding application: {ex.Message}";
+                _logger.LogError(ex, "Failed to add application");
+                LogContent += $"[{DateTime.Now:HH:mm:ss}] ERROR adding application: {ex.Message}\n";
+                StatusMessage = "Error adding application";
             }
         }
 
@@ -254,7 +252,7 @@ namespace TaskFlow.ViewModels
         {
             if (parameter is MonitoredApplication app)
             {
-                var dialog = new AddApplicationDialog(app);
+                var dialog = new Views.EditApplicationDialog(app);
                 if (dialog.ShowDialog() == true && dialog.Application != null)
                 {
                     _ = Task.Run(async () =>

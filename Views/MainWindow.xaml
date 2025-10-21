@@ -4,7 +4,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:TaskFlow.ViewModels"
         Title="TaskFlow - Server Application Monitor" 
-        Height="800" Width="1200"
+        Height="800" Width="1300"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
@@ -143,39 +143,39 @@
                                 <DataGridTextColumn Header="Executable" Binding="{Binding ExecutablePath}" Width="300"/>
                                 <DataGridTextColumn Header="Last Started" Binding="{Binding LastStarted, StringFormat='{}{0:MM/dd/yyyy HH:mm:ss}'}" Width="150"/>
                                 <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding IsEnabled}" Width="80"/>
-                                <DataGridTemplateColumn Header="Actions" Width="200">
+                                <DataGridTemplateColumn Header="Actions" Width="280">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
                                                 <Button Style="{StaticResource MaterialDesignIconButton}" 
-                                                        ToolTip="Start" Margin="2"
+                                                        ToolTip="Start" Margin="1" Width="40" Height="40"
                                                         Command="{Binding DataContext.StartApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}">
-                                                    <materialDesign:PackIcon Kind="Play" />
+                                                    <materialDesign:PackIcon Kind="Play" Width="16" Height="16" />
                                                 </Button>
                                                 <Button Style="{StaticResource MaterialDesignIconButton}" 
-                                                        ToolTip="Stop" Margin="2"
+                                                        ToolTip="Stop" Margin="1" Width="40" Height="40"
                                                         Command="{Binding DataContext.StopApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}">
-                                                    <materialDesign:PackIcon Kind="Stop" />
+                                                    <materialDesign:PackIcon Kind="Stop" Width="16" Height="16" />
                                                 </Button>
                                                 <Button Style="{StaticResource MaterialDesignIconButton}" 
-                                                        ToolTip="Restart" Margin="2"
+                                                        ToolTip="Restart" Margin="1" Width="40" Height="40"
                                                         Command="{Binding DataContext.RestartApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}">
-                                                    <materialDesign:PackIcon Kind="Restart" />
+                                                    <materialDesign:PackIcon Kind="Restart" Width="16" Height="16" />
                                                 </Button>
                                                 <Button Style="{StaticResource MaterialDesignIconButton}" 
-                                                        ToolTip="Edit" Margin="2"
+                                                        ToolTip="Edit" Margin="1" Width="40" Height="40"
                                                         Command="{Binding DataContext.EditApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}">
-                                                    <materialDesign:PackIcon Kind="Edit" />
+                                                    <materialDesign:PackIcon Kind="Edit" Width="16" Height="16" />
                                                 </Button>
                                                 <Button Style="{StaticResource MaterialDesignIconButton}" 
-                                                        ToolTip="Delete" Margin="2"
+                                                        ToolTip="Delete" Margin="1" Width="40" Height="40"
                                                         Command="{Binding DataContext.DeleteApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}">
-                                                    <materialDesign:PackIcon Kind="Delete" />
+                                                    <materialDesign:PackIcon Kind="Delete" Width="16" Height="16" />
                                                 </Button>
                                             </StackPanel>
                                         </DataTemplate>
