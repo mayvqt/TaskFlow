@@ -16,29 +16,40 @@ namespace TaskFlow
 
         protected override async void OnStartup(StartupEventArgs e)
         {
-            _host = Host.CreateDefaultBuilder()
-                .ConfigureServices((context, services) =>
-                {
-                    // Register Services
-                    services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
-                    services.AddSingleton<ISchedulingService, SchedulingService>();
-                    services.AddSingleton<IConfigurationService, ConfigurationService>();
-                    services.AddSingleton<IApplicationManagementService, ApplicationManagementService>();
+            try
+            {
+                _host = Host.CreateDefaultBuilder()
+                    .ConfigureServices((context, services) =>
+                    {
+                        // Register Services
+                        services.AddSingleton<IProcessMonitorService, ProcessMonitorService>();
+                        services.AddSingleton<ISchedulingService, SchedulingService>();
+                        services.AddSingleton<IConfigurationService, ConfigurationService>();
+                        services.AddSingleton<IApplicationManagementService, ApplicationManagementService>();
 
-                    // Register ViewModels
-                    services.AddTransient<MainWindowViewModel>();
+                        // Register ViewModels
+                        services.AddTransient<MainWindowViewModel>();
 
-                    // Register Views
-                    services.AddTransient<MainWindow>();
-                })
-                .Build();
+                        // Register Views
+                        services.AddTransient<MainWindow>();
+                    })
+                    .Build();
 
-            await _host.StartAsync();
+                await _host.StartAsync();
 
-            var mainWindow = _host.Services.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+                var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+                mainWindow.Show();
 
-            base.OnStartup(e);
+                base.OnStartup(e);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Error starting application: {ex.Message}\n\nStack Trace:\n{ex.StackTrace}", 
+                    "TaskFlow Startup Error", 
+                    System.Windows.MessageBoxButton.OK, 
+                    System.Windows.MessageBoxImage.Error);
+                Shutdown();
+            }
         }
 
         protected override async void OnExit(ExitEventArgs e)

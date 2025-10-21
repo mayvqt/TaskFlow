@@ -7,7 +7,6 @@
     <UseWindowsDesktopSdk>true</UseWindowsDesktopSdk>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
     <AssemblyTitle>TaskFlow - Server Application Monitor</AssemblyTitle>
     <AssemblyDescription>Windows Server Application Monitor and Manager</AssemblyDescription>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>

@@ -1,0 +1,67 @@
+{
+  "Applications": [
+    {
+      "Id": "sample-app-1",
+      "Name": "Sample Web Server",
+      "ExecutablePath": "C:\\inetpub\\wwwroot\\MyApp\\MyWebApp.exe",
+      "Arguments": "--port 8080",
+      "WorkingDirectory": "C:\\inetpub\\wwwroot\\MyApp",
+      "IsEnabled": true,
+      "Status": 0,
+      "StartupDelay": "00:00:30",
+      "RestartOnCrash": true,
+      "MaxRestartAttempts": 3,
+      "CurrentRestartAttempts": 0,
+      "Schedules": [
+        {
+          "Id": "startup-schedule-1",
+          "ApplicationId": "sample-app-1",
+          "Name": "Start on System Startup",
+          "ScheduleType": 1,
+          "Action": 0,
+          "IsEnabled": true
+        },
+        {
+          "Id": "daily-restart-1",
+          "ApplicationId": "sample-app-1",
+          "Name": "Daily Restart at 3 AM",
+          "ScheduleType": 3,
+          "Action": 2,
+          "Time": "03:00:00",
+          "IsEnabled": true
+        }
+      ]
+    },
+    {
+      "Id": "sample-app-2",
+      "Name": "Database Backup Service",
+      "ExecutablePath": "C:\\Services\\DatabaseBackup\\BackupService.exe",
+      "Arguments": "--config backup-config.json",
+      "WorkingDirectory": "C:\\Services\\DatabaseBackup",
+      "IsEnabled": true,
+      "Status": 0,
+      "StartupDelay": "00:01:00",
+      "RestartOnCrash": true,
+      "MaxRestartAttempts": 5,
+      "CurrentRestartAttempts": 0,
+      "Schedules": [
+        {
+          "Id": "startup-schedule-2",
+          "ApplicationId": "sample-app-2",
+          "Name": "Start Backup Service on Startup",
+          "ScheduleType": 1,
+          "Action": 0,
+          "IsEnabled": true
+        }
+      ]
+    }
+  ],
+  "StartMinimized": false,
+  "MinimizeToTray": true,
+  "AutoStartApplications": true,
+  "MonitoringInterval": 5000,
+  "ShowNotifications": true,
+  "LogLevel": "Information",
+  "MaxLogFiles": 10,
+  "CheckForUpdates": true
+}

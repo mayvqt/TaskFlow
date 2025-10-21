@@ -1,0 +1,312 @@
+<Window x:Class="TaskFlow.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewmodels="clr-namespace:TaskFlow.ViewModels"
+        Title="TaskFlow - Server Application Monitor" 
+        Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <materialDesign:ColorZone Grid.Row="0" Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                  Mode="PrimaryMid" SnapsToDevicePixels="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="MonitorDashboard" Height="28" Width="28" 
+                                           VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <TextBlock Text="TaskFlow" FontSize="22" FontWeight="Medium" 
+                             VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Style="{StaticResource MaterialDesignToolButton}" 
+                            ToolTip="System Information" Margin="8,0"
+                            Command="{Binding ShowSystemInfoCommand}">
+                        <materialDesign:PackIcon Kind="Information" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignToolButton}" 
+                            ToolTip="Settings" Margin="8,0"
+                            Command="{Binding ShowSettingsCommand}">
+                        <materialDesign:PackIcon Kind="Settings" />
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignToolButton}" 
+                            ToolTip="About" Margin="8,0"
+                            Command="{Binding ShowAboutCommand}">
+                        <materialDesign:PackIcon Kind="Help" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </materialDesign:ColorZone>
+
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" Style="{StaticResource MaterialDesignTabControl}">
+            
+            <!-- Applications Tab -->
+            <TabItem Header="Applications">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Application" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Applications Toolbar -->
+                    <materialDesign:Card Grid.Row="0" Margin="16,16,16,8" Padding="16">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Command="{Binding AddApplicationCommand}" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Add Application"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}" 
+                                    Command="{Binding StartAllApplicationsCommand}" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Play" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Start All"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}" 
+                                    Command="{Binding StopAllApplicationsCommand}" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Stop" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Stop All"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}" 
+                                    Command="{Binding RefreshApplicationsCommand}" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Refresh" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Refresh"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <!-- Applications List -->
+                    <materialDesign:Card Grid.Row="1" Margin="16,8,16,16">
+                        <DataGrid ItemsSource="{Binding Applications}" AutoGenerateColumns="False"
+                                  CanUserAddRows="False" CanUserDeleteRows="False"
+                                  materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                                  materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="200"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding StatusText}" Width="100">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="Running">
+                                                    <Setter Property="Foreground" Value="Green"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Stopped">
+                                                    <Setter Property="Foreground" Value="Red"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Error">
+                                                    <Setter Property="Foreground" Value="Orange"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Executable" Binding="{Binding ExecutablePath}" Width="300"/>
+                                <DataGridTextColumn Header="Last Started" Binding="{Binding LastStarted, StringFormat='{}{0:MM/dd/yyyy HH:mm:ss}'}" Width="150"/>
+                                <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding IsEnabled}" Width="80"/>
+                                <DataGridTemplateColumn Header="Actions" Width="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                                        ToolTip="Start" Margin="2"
+                                                        Command="{Binding DataContext.StartApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}">
+                                                    <materialDesign:PackIcon Kind="Play" />
+                                                </Button>
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                                        ToolTip="Stop" Margin="2"
+                                                        Command="{Binding DataContext.StopApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}">
+                                                    <materialDesign:PackIcon Kind="Stop" />
+                                                </Button>
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                                        ToolTip="Restart" Margin="2"
+                                                        Command="{Binding DataContext.RestartApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}">
+                                                    <materialDesign:PackIcon Kind="Restart" />
+                                                </Button>
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                                        ToolTip="Edit" Margin="2"
+                                                        Command="{Binding DataContext.EditApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}">
+                                                    <materialDesign:PackIcon Kind="Edit" />
+                                                </Button>
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                                        ToolTip="Delete" Margin="2"
+                                                        Command="{Binding DataContext.DeleteApplicationCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}">
+                                                    <materialDesign:PackIcon Kind="Delete" />
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </materialDesign:Card>
+                </Grid>
+            </TabItem>
+
+            <!-- Schedules Tab -->
+            <TabItem Header="Schedules">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Schedule" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Schedules Toolbar -->
+                    <materialDesign:Card Grid.Row="0" Margin="16,16,16,8" Padding="16">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Command="{Binding AddScheduleCommand}" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Add Schedule"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}" 
+                                    Command="{Binding RefreshSchedulesCommand}" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Refresh" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Refresh"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <!-- Schedules List -->
+                    <materialDesign:Card Grid.Row="1" Margin="16,8,16,16">
+                        <DataGrid ItemsSource="{Binding Schedules}" AutoGenerateColumns="False"
+                                  CanUserAddRows="False" CanUserDeleteRows="False"
+                                  materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                                  materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="200"/>
+                                <DataGridTextColumn Header="Application" Binding="{Binding ApplicationId}" Width="150"/>
+                                <DataGridTextColumn Header="Schedule Type" Binding="{Binding ScheduleType}" Width="120"/>
+                                <DataGridTextColumn Header="Action" Binding="{Binding Action}" Width="100"/>
+                                <DataGridTextColumn Header="Next Execution" Binding="{Binding NextExecution, StringFormat='{}{0:MM/dd/yyyy HH:mm:ss}'}" Width="150"/>
+                                <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding IsEnabled}" Width="80"/>
+                                <DataGridTemplateColumn Header="Actions" Width="150">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                                        ToolTip="Edit" Margin="2"
+                                                        Command="{Binding DataContext.EditScheduleCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}">
+                                                    <materialDesign:PackIcon Kind="Edit" />
+                                                </Button>
+                                                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                                        ToolTip="Delete" Margin="2"
+                                                        Command="{Binding DataContext.DeleteScheduleCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}">
+                                                    <materialDesign:PackIcon Kind="Delete" />
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </materialDesign:Card>
+                </Grid>
+            </TabItem>
+
+            <!-- Logs Tab -->
+            <TabItem Header="Logs">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="FileDocument" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                
+                <materialDesign:Card Margin="16">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <TextBox Text="{Binding LogContent}" IsReadOnly="True" 
+                                 TextWrapping="Wrap" FontFamily="Consolas"
+                                 Background="Transparent" BorderThickness="0"/>
+                    </ScrollViewer>
+                </materialDesign:Card>
+            </TabItem>
+        </TabControl>
+
+        <!-- Status Bar -->
+        <materialDesign:ColorZone Grid.Row="2" Padding="16,8" materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                  Mode="PrimaryLight" SnapsToDevicePixels="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Text="Running: " VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding RunningApplicationsCount}" VerticalAlignment="Center" 
+                               FontWeight="Bold" Foreground="Green" Margin="0,0,16,0"/>
+                    <TextBlock Text="Stopped: " VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding StoppedApplicationsCount}" VerticalAlignment="Center" 
+                               FontWeight="Bold" Foreground="Red" Margin="0,0,16,0"/>
+                    <TextBlock Text="{Binding CurrentTime, StringFormat='{}{0:HH:mm:ss}'}" VerticalAlignment="Center" 
+                               FontWeight="Medium"/>
+                </StackPanel>
+            </Grid>
+        </materialDesign:ColorZone>
+    </Grid>
+</Window>
