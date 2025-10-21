@@ -10,7 +10,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}">
 
-    <Grid Margin="20">
+    <Grid Margin="25">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -20,19 +20,19 @@
         <!-- Header -->
         <TextBlock Grid.Row="0" Text="Edit Application" 
                    FontSize="20" FontWeight="Medium" 
-                   Margin="0,0,0,20"/>
+                   Margin="0,0,0,25"/>
 
         <!-- Form Content -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,15,0">
+            <StackPanel Margin="0,0,10,0">
                 <!-- Application Name -->
                 <TextBox x:Name="NameTextBox"
                          materialDesign:HintAssist.Hint="Application Name"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         Margin="0,0,0,20"/>
+                         Margin="0,0,0,25"/>
 
                 <!-- Executable Path -->
-                <Grid Margin="0,0,0,20">
+                <Grid Margin="0,0,0,25">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -54,18 +54,18 @@
                 <TextBox x:Name="ArgumentsTextBox"
                          materialDesign:HintAssist.Hint="Command Line Arguments (Optional)"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         Margin="0,0,0,20"/>
+                         Margin="0,0,0,25"/>
 
                 <!-- Working Directory -->
                 <TextBox x:Name="WorkingDirectoryTextBox"
                          materialDesign:HintAssist.Hint="Working Directory (Optional)"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         Margin="0,0,0,20"/>
+                         Margin="0,0,0,25"/>
 
                 <!-- Options Group -->
-                <materialDesign:Card Padding="20" Margin="0,5,0,20" materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                <materialDesign:Card Padding="25" Margin="0,10,0,25" materialDesign:ShadowAssist.ShadowDepth="Depth1">
                     <StackPanel>
-                        <TextBlock Text="Options" FontWeight="Medium" Margin="0,0,0,10"/>
+                        <TextBlock Text="Options" FontWeight="Medium" Margin="0,0,0,15"/>
                         
                         <!-- Enable Application -->
                         <CheckBox x:Name="IsEnabledCheckBox"
@@ -124,11 +124,11 @@
         </ScrollViewer>
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,25,0,0">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,30,0,0">
             <Button Content="Cancel" 
                     Style="{StaticResource MaterialDesignOutlinedButton}"
                     Click="CancelButton_Click"
-                    Margin="0,0,15,0"
+                    Margin="0,0,20,0"
                     Width="120"
                     Height="40"/>
             
