@@ -4,7 +4,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:viewmodels="clr-namespace:TaskFlow.ViewModels"
         Title="TaskFlow - Server Application Monitor" 
-        Height="800" Width="1300"
+        Height="800" Width="1450"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
@@ -141,7 +141,9 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="Executable" Binding="{Binding ExecutablePath}" Width="300"/>
+                                <DataGridTextColumn Header="Process ID" Binding="{Binding ProcessId}" Width="80"/>
                                 <DataGridTextColumn Header="Last Started" Binding="{Binding LastStarted, StringFormat='{}{0:MM/dd/yyyy HH:mm:ss}'}" Width="150"/>
+                                <DataGridTextColumn Header="Crashes" Binding="{Binding TotalCrashes}" Width="70"/>
                                 <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding IsEnabled}" Width="80"/>
                                 <DataGridTemplateColumn Header="Actions" Width="280">
                                     <DataGridTemplateColumn.CellTemplate>

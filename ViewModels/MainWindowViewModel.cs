@@ -166,7 +166,28 @@ namespace TaskFlow.ViewModels
             {
                 OnPropertyChanged(nameof(RunningApplicationsCount));
                 OnPropertyChanged(nameof(StoppedApplicationsCount));
-                StatusMessage = $"Application {application.Name} status changed to {application.Status}";
+                
+                var statusMessage = $"Application {application.Name} status changed to {application.Status}";
+                var logMessage = $"[{DateTime.Now:HH:mm:ss}] {statusMessage}";
+                
+                // Add crash information if applicable
+                if (application.Status == ApplicationStatus.Stopped && application.LastCrashTime.HasValue)
+                {
+                    logMessage += $" - Total crashes: {application.TotalCrashes}";
+                    if (application.CurrentRestartAttempts > 0)
+                    {
+                        logMessage += $" - Restart attempts: {application.CurrentRestartAttempts}/{application.MaxRestartAttempts}";
+                    }
+                }
+                
+                // Add process ID information
+                if (application.ProcessId > 0)
+                {
+                    logMessage += $" - PID: {application.ProcessId}";
+                }
+                
+                StatusMessage = statusMessage;
+                LogContent += logMessage + "\n";
             });
         }
 

@@ -162,11 +162,42 @@ namespace TaskFlow.Services
             try
             {
                 var process = Process.GetProcessById(application.ProcessId);
-                return !process.HasExited;
+                
+                // Additional check to ensure it's the same executable
+                if (!process.HasExited)
+                {
+                    try
+                    {
+                        var processPath = process.MainModule?.FileName;
+                        if (!string.IsNullOrEmpty(processPath) && 
+                            Path.GetFullPath(processPath).Equals(Path.GetFullPath(application.ExecutablePath), StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            _logger.LogWarning($"Process {application.ProcessId} exists but executable path doesn't match. Expected: {application.ExecutablePath}, Found: {processPath}");
+                            return false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogDebug($"Could not verify process path for {application.Name}: {ex.Message}");
+                        // If we can't verify the path but process exists and hasn't exited, assume it's running
+                        return true;
+                    }
+                }
+                
+                return false;
             }
             catch (ArgumentException)
             {
                 // Process doesn't exist
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error checking if application {application.Name} is running");
                 return false;
             }
         }
@@ -178,23 +209,36 @@ namespace TaskFlow.Services
 
             if (wasRunning && !isRunning)
             {
-                // Application crashed
+                // Application crashed - calculate uptime
+                if (application.LastStarted.HasValue)
+                {
+                    var uptime = DateTime.Now - application.LastStarted.Value;
+                    application.TotalUptime = application.TotalUptime.Add(uptime);
+                }
+
+                // Update crash tracking
                 application.Status = ApplicationStatus.Stopped;
                 application.LastStopped = DateTime.Now;
+                application.LastCrashTime = DateTime.Now;
+                application.TotalCrashes++;
                 application.ProcessId = 0;
 
-                _logger.LogWarning($"Application {application.Name} has stopped unexpectedly");
+                _logger.LogWarning($"Application {application.Name} has crashed (PID was {application.ProcessId}). Total crashes: {application.TotalCrashes}");
 
                 if (application.RestartOnCrash && application.CurrentRestartAttempts < application.MaxRestartAttempts)
                 {
                     application.CurrentRestartAttempts++;
-                    _logger.LogInformation($"Attempting to restart {application.Name} (Attempt {application.CurrentRestartAttempts}/{application.MaxRestartAttempts})");
+                    _logger.LogInformation($"Attempting to restart {application.Name} (Attempt {application.CurrentRestartAttempts}/{application.MaxRestartAttempts}) after crash");
                     
                     await Task.Delay(5000); // Wait before restart
                     await StartApplicationAsync(application);
                 }
                 else
                 {
+                    if (application.CurrentRestartAttempts >= application.MaxRestartAttempts)
+                    {
+                        _logger.LogError($"Maximum restart attempts ({application.MaxRestartAttempts}) reached for {application.Name}. Giving up.");
+                    }
                     ApplicationStatusChanged?.Invoke(this, application);
                 }
             }

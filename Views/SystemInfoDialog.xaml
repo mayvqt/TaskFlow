@@ -1,0 +1,174 @@
+<Window x:Class="TaskFlow.Views.SystemInfoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="System Information - TaskFlow" 
+        Height="600" Width="700"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,25">
+            <materialDesign:PackIcon Kind="Information" Height="32" Width="32" 
+                                   VerticalAlignment="Center" Margin="0,0,15,0"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+            <TextBlock Text="TaskFlow System Information" 
+                       FontSize="22" FontWeight="Medium" 
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,15,0">
+            <StackPanel Margin="0,0,10,0">
+                
+                <!-- Application Information -->
+                <materialDesign:Card Padding="25" Margin="0,0,0,20" materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                    <StackPanel>
+                        <TextBlock Text="Application Information" FontWeight="Medium" FontSize="16" Margin="0,0,0,15"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Application:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="TaskFlow" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Version:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="VersionTextBlock" Text="1.0.0" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Build Date:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="BuildDateTextBlock" Text="October 2025" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Runtime:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="RuntimeTextBlock" Text=".NET 8.0" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Platform:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" x:Name="PlatformTextBlock" Text="Windows" Margin="0,5"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- System Information -->
+                <materialDesign:Card Padding="25" Margin="0,0,0,20" materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                    <StackPanel>
+                        <TextBlock Text="System Information" FontWeight="Medium" FontSize="16" Margin="0,0,0,15"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="OS Version:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="OSVersionTextBlock" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Machine Name:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="MachineNameTextBlock" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="User Name:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="UserNameTextBlock" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Working Directory:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="WorkingDirTextBlock" TextWrapping="Wrap" Margin="0,5"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Recent Changes -->
+                <materialDesign:Card Padding="25" Margin="0,0,0,20" materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                    <StackPanel>
+                        <TextBlock Text="Recent Changes" FontWeight="Medium" FontSize="16" Margin="0,0,0,15"/>
+                        
+                        <TextBlock Text="Version 1.0.0 - October 2025" FontWeight="Medium" Margin="0,0,0,10"/>
+                        <TextBlock Text="• Enhanced crash tracking with process ID monitoring" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Added total crash count and uptime tracking" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Improved process verification by executable path" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Enhanced logging with detailed crash information" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Added Process ID and Crashes columns to main view" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Dark theme with greeny-teal accent colors" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Improved dialog spacing and layout" Margin="10,0,0,5"/>
+                        <TextBlock Text="• File browser for application selection" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Auto-restart functionality with configurable attempts" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Startup scheduling and delay configuration" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Material Design UI with modern styling" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Comprehensive application lifecycle management" Margin="10,0,0,5"/>
+                        <TextBlock Text="• JSON-based configuration persistence" Margin="10,0,0,15"/>
+                        
+                        <TextBlock Text="Features:" FontWeight="Medium" Margin="0,0,0,10"/>
+                        <TextBlock Text="• Start, stop, restart applications with monitoring" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Automatic crash detection and restart attempts" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Process ID tracking and verification" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Scheduling support (startup, interval, daily, weekly)" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Real-time status monitoring and logging" Margin="10,0,0,5"/>
+                        <TextBlock Text="• Configurable startup delays and working directories" Margin="10,0,0,5"/>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Statistics -->
+                <materialDesign:Card Padding="25" Margin="0,0,0,20" materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                    <StackPanel>
+                        <TextBlock Text="Current Session Statistics" FontWeight="Medium" FontSize="16" Margin="0,0,0,15"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Total Applications:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="TotalAppsTextBlock" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Running Applications:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="RunningAppsTextBlock" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Total Schedules:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="TotalSchedulesTextBlock" Margin="0,5"/>
+                            
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Session Start Time:" FontWeight="Medium" Margin="0,5"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="SessionStartTextBlock" Margin="0,5"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:Card>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Close Button -->
+        <Button Grid.Row="2" Content="Close" 
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Click="CloseButton_Click"
+                HorizontalAlignment="Right"
+                Width="120" Height="40"
+                Margin="0,25,0,0"/>
+    </Grid>
+</Window>

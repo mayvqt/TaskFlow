@@ -37,6 +37,9 @@ namespace TaskFlow.Models
         private bool _restartOnCrash = true;
         private int _maxRestartAttempts = 3;
         private int _currentRestartAttempts;
+        private DateTime? _lastCrashTime;
+        private int _totalCrashes;
+        private TimeSpan _totalUptime = TimeSpan.Zero;
 
         public string Id { get; set; } = Guid.NewGuid().ToString();
         
@@ -118,6 +121,24 @@ namespace TaskFlow.Models
         {
             get => _currentRestartAttempts;
             set { _currentRestartAttempts = value; OnPropertyChanged(nameof(CurrentRestartAttempts)); }
+        }
+
+        public DateTime? LastCrashTime
+        {
+            get => _lastCrashTime;
+            set { _lastCrashTime = value; OnPropertyChanged(nameof(LastCrashTime)); }
+        }
+
+        public int TotalCrashes
+        {
+            get => _totalCrashes;
+            set { _totalCrashes = value; OnPropertyChanged(nameof(TotalCrashes)); }
+        }
+
+        public TimeSpan TotalUptime
+        {
+            get => _totalUptime;
+            set { _totalUptime = value; OnPropertyChanged(nameof(TotalUptime)); }
         }
 
         public List<ScheduleTask> Schedules { get; set; } = new();
